@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Montlake Card Co — University of Washington themed premium playing cards. 52 unique UW-inspired designs." />
+  <title>Montlake Card Co — UW Themed Playing Cards</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        Montlake Card Co
+      </a>
+      <button class="navbar__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="designs.html">Designs</a></li>
+        <li><a href="https://forms.gle/eXXVjLLw5Mf7kGMv6" target="_blank">Order</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ===== IMAGE GALLERY HERO ===== -->
+    <div class="hero-gallery" aria-hidden="true">
+      <div class="hero-col" id="heroCol0"></div>
+      <div class="hero-col" id="heroCol1"></div>
+      <div class="hero-col" id="heroCol2"></div>
+    </div>
+
+    <!-- ===== INTRO ===== -->
+    <section class="home-intro section">
+      <div class="container">
+        <h1 class="home-intro__title">Montlake Card Co</h1>
+        <p class="home-intro__desc">
+          A full deck of 52 beautifully illustrated playing cards, each one celebrating the spirit,
+          landmarks, and traditions of the University of Washington. Our cards are designed by UW students, for Husky fans everywhere.
+        </p>
+        <div class="home-intro__ctas">
+          <a href="designs.html" class="btn btn--primary btn--large">See Our Designs</a>
+          <a href="https://forms.gle/eXXVjLLw5Mf7kGMv6" target="_blank" class="btn btn--outline btn--large">Order Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="features__grid features__grid--4">
+
+          <div class="feature-card">
+            <h3>UW Themed</h3>
+            <p>Celebrating Husky spirit through iconic UW imagery, colors, and campus culture throughout the deck.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Premium Quality</h3>
+            <p>Printed on high-quality card stock with a premium finish. Our cards are built to play, display, and collect.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Perfect Gift</h3>
+            <p>The ideal gift and souvenir for UW students, alumni, faculty, and Husky fans of all kinds.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Original Art</h3>
+            <p>Each card is hand-crafted artwork by a dedicated UW student artist, making them truly one-of-a-kind.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 <span>Montlake Card Co</span>. Made by Huskies for Huskies &lt;3</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    (function initHeroGallery() {
+      const images = [
+        'Designs/WSign.png',
+        'Designs/cherry.png',
+        'Designs/denny.png',
+        'Designs/drumheller.png',
+        'Designs/dubs.png',
+        'Designs/suzzallo.png'
+      ];
+
+      // Assign 2 images per column: col0=[0,3], col1=[1,4], col2=[2,5]
+      const cols = [
+        [images[0], images[3]],
+        [images[1], images[4]],
+        [images[2], images[5]]
+      ];
+
+      cols.forEach(function(pair, i) {
+        const col = document.getElementById('heroCol' + i);
+
+        // Create two img elements stacked; swap on interval
+        const imgA = document.createElement('img');
+        const imgB = document.createElement('img');
+        imgA.src = pair[0];  imgA.alt = '';  imgA.className = 'hero-col__img visible';
+        imgB.src = pair[1];  imgB.alt = '';  imgB.className = 'hero-col__img';
+        col.appendChild(imgA);
+        col.appendChild(imgB);
+
+        let showingA = true;
+        // Stagger columns by 2s each
+        setTimeout(function() {
+          setInterval(function() {
+            if (showingA) {
+              imgA.classList.remove('visible');
+              imgB.classList.add('visible');
+            } else {
+              imgB.classList.remove('visible');
+              imgA.classList.add('visible');
+            }
+            showingA = !showingA;
+          }, 4000);
+        }, i * 1000);
+      });
+    })();
+  </script>
+</body>
+</html>

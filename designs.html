@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse all 52 unique UW-themed playing card designs from Montlake Card Co." />
+  <title>Our Designs — Montlake Card Co</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        Montlake Card Co
+      </a>
+      <button class="navbar__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="designs.html">Designs</a></li>
+        <li><a href="https://forms.gle/eXXVjLLw5Mf7kGMv6" target="_blank">Order</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="designs-header">
+      <div class="container">
+        <h1>Our Designs</h1>
+        <p>View all of our student drawn designs that reflect UW pride</p>
+      </div>
+    </div>
+
+    <!-- ===== GALLERY ===== -->
+    <section class="section">
+      <div class="container">
+
+        <!-- Suit Filter Buttons -->
+        <div class="filter-bar" role="group" aria-label="Filter by suit">
+          <button class="filter-btn active" data-suit="spades">Spades</button>
+          <button class="filter-btn" data-suit="hearts">Hearts</button>
+          <button class="filter-btn" data-suit="diamonds">Diamonds</button>
+          <button class="filter-btn" data-suit="clubs">Clubs</button>
+        </div>
+
+        <!-- Card Grid — populated by JavaScript -->
+        <div class="cards-grid" id="cardsGrid" role="list" aria-label="Playing card gallery">
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== CARD MODAL ===== -->
+  <div class="modal-overlay" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal__close" aria-label="Close">&times;</button>
+      <img class="modal__image" src="" alt="" id="modalImage" />
+      <h2 class="modal__title" id="modalTitle"></h2>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 <span>Montlake Card Co</span>. | Made by Huskies for Huskies &lt;3</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    /* ====================================================
+       Designs Gallery — image-based, per-suit view
+       Image mapping: Spades 1-13, Hearts 14-26,
+                      Diamonds 27-39, Clubs 40-52
+       ==================================================== */
+    const SUIT_CONFIG = {
+      spades:   { start: 1,  label: 'Spades' },
+      hearts:   { start: 14, label: 'Hearts' },
+      diamonds: { start: 27, label: 'Diamonds' },
+      clubs:    { start: 40, label: 'Clubs' }
+    };
+    const VALUES = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+
+    function imgPath(n) {
+      return 'card%20design%20template/' + n + '.png';
+    }
+
+    function buildSuit(suitKey) {
+      const grid = document.getElementById('cardsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const { start, label } = SUIT_CONFIG[suitKey];
+      const reversed = (suitKey === 'spades' || suitKey === 'hearts');
+      const orderedValues = reversed ? VALUES.slice().reverse() : VALUES;
+
+      orderedValues.forEach(function(val, i) {
+        const imgNum = reversed ? (start + 12 - i) : (start + i);
+        const src    = imgPath(imgNum);
+        const altTxt = val + ' of ' + label;
+
+        const item = document.createElement('div');
+        item.className = 'card-item';
+        item.dataset.suit  = suitKey;
+        item.dataset.value = val;
+        item.dataset.img   = src;
+        item.setAttribute('role', 'listitem');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('aria-label', altTxt + '. Click to view.');
+
+        const img = document.createElement('img');
+        img.src     = src;
+        img.alt     = altTxt;
+        img.loading = 'lazy';
+        item.appendChild(img);
+
+        item.addEventListener('click', function() { openModal(src, altTxt); });
+        item.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(src, altTxt); }
+        });
+
+        grid.appendChild(item);
+      });
+    }
+
+    /* ---- Filter buttons ---- */
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        buildSuit(btn.dataset.suit);
+      });
+    });
+
+    /* ---- Modal ---- */
+    var overlay  = document.getElementById('cardModal');
+    var modalImg = document.getElementById('modalImage');
+    var modalTitle = document.getElementById('modalTitle');
+
+    function openModal(src, title) {
+      modalImg.src = src;
+      modalImg.alt = title;
+      modalTitle.textContent = title;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    overlay.querySelector('.modal__close').addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+    /* ---- Default: show Spades on load ---- */
+    buildSuit('spades');
+  </script>
+</body>
+</html>
